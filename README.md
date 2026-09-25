@@ -1,4 +1,4 @@
-# Plugin Loader Untrusted Search Path in GNU libextractor ≤ 1.15
+# CVE-2026-100310: GNU libextractor Privilege Escalation via LIBEXTRACTOR_PREFIX
 
 ## Summary
 
@@ -7,13 +7,19 @@ GNU libextractor's plugin loading mechanism uses the `LIBEXTRACTOR_PREFIX` envir
 **Primary Impact:** Local Privilege Escalation (LPE) to `root`.
 
 | Field | Value |
-|-------|-------|
-| Severity | **HIGH** (CVSS 4.0: 8.5) |
+|---|---|
+| CVE | **CVE-2026-100310** |
+| Product | GNU libextractor |
+| Affected Versions | >= 0, < 1.16 |
+| Fixed Version | 1.16 |
+| CVSS 4.0 | **7.3 HIGH** (`CVSS:4.0/AV:L/AC:L/AT:P/PR:L/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N`) |
+| Severity | **HIGH** |
 | CWE | CWE-426 (Untrusted Search Path) |
 | Attack Vector | Local |
 | Privileges Required | Low |
 | User Interaction | None |
-| Affected Versions | All versions through 1.15 |
+| CNA | VulnCheck |
+| Researcher | Haitam Lazaar |
 
 > **Note:** For this vulnerability to result in Local Privilege Escalation, an administrator must have configured a binary that links to `libextractor` with the `setuid` bit. While `libextractor` itself does not ship with a `setuid` binary, any privileged process or system daemon that dynamically links this library and fails to manually sanitize the environment is vulnerable to full compromise.
 
@@ -115,6 +121,14 @@ The maintainer fixed this in version 1.16 by replacing `getenv()` with `secure_g
 -  if (NULL != (p = getenv ("LIBEXTRACTOR_PREFIX")))
 +  if (NULL != (p = secure_getenv ("LIBEXTRACTOR_PREFIX")))
 ```
+
+## References
+
+- **CVE Record:** https://www.cve.org/CVERecord?id=CVE-2026-100310
+- **VulnCheck Advisory:** https://www.vulncheck.com/advisories/gnu-libextractor-before-1.16-privilege-escalation-via-libextractor-prefix
+- **Upstream Patch Commit:** https://git.gnunet.org/gnunet/libextractor/commit/6edfa653c048800e24a17f7e8cc2bb42659b8d01.html
+- **Product Releases:** https://ftp.gnu.org/gnu/libextractor/
+- **Product:** https://www.gnu.org/software/libextractor/
 
 ## Credit
 
